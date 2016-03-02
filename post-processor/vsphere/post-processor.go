@@ -127,7 +127,7 @@ func (p *PostProcessor) PostProcess(ui packer.Ui, artifact packer.Artifact) (pac
 		fmt.Sprintf("--datastore=\"%s\"", p.config.Datastore),
 	}
 
-	if p.config.Insecure != "" {
+	if p.config.Insecure {
 		args = append(args, fmt.Sprintf("--noSSLVerify=%t", p.config.Insecure))
 	}
 
@@ -139,7 +139,7 @@ func (p *PostProcessor) PostProcess(ui packer.Ui, artifact packer.Artifact) (pac
 		args = append(args, fmt.Sprintf("--vmFolder=\"%s\"", p.config.VMFolder))
 	}
 
-	if p.config.Network != "" {
+	if p.config.VMNetwork != "" {
 		args = append(args, fmt.Sprintf("--network=\"%s\"", p.config.VMNetwork))
 	}
 
@@ -155,7 +155,7 @@ func (p *PostProcessor) PostProcess(ui packer.Ui, artifact packer.Artifact) (pac
 
 	// We always want these last
 	args = append(args, fmt.Sprintf("%s", source))
-	args = append(args, fmt.Sprintf("\"%s\"", ovftool_uri))
+	args = append(args, fmt.Sprintf("%s", ovftool_uri))
 
 	ui.Message(fmt.Sprintf("Uploading %s to vSphere", source))
 	var out bytes.Buffer
