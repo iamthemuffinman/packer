@@ -154,8 +154,8 @@ func (p *PostProcessor) PostProcess(ui packer.Ui, artifact packer.Artifact) (pac
 	}
 
 	// We always want these last
-	args = append(args, fmt.Sprintf("%s", source))
-	args = append(args, fmt.Sprintf("%s", ovftool_uri))
+	args = append(args, fmt.Sprintf("\"%s\"", source))
+	args = append(args, fmt.Sprintf("\"%s\"", ovftool_uri))
 
 	ui.Message(fmt.Sprintf("Uploading %s to vSphere", source))
 	var out bytes.Buffer
