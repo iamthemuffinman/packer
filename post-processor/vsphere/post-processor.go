@@ -122,15 +122,25 @@ func (p *PostProcessor) PostProcess(ui packer.Ui, artifact packer.Artifact) (pac
 	}
 
 	args := []string{
-		fmt.Sprintf("--noSSLVerify=%t", p.config.Insecure),
 		"--acceptAllEulas",
 		fmt.Sprintf("--name=\"%s\"", p.config.VMName),
 		fmt.Sprintf("--datastore=\"%s\"", p.config.Datastore),
-		fmt.Sprintf("--diskMode=\"%s\"", p.config.DiskMode),
-		fmt.Sprintf("--network=\"%s\"", p.config.VMNetwork),
-		fmt.Sprintf("--vmFolder=\"%s\"", p.config.VMFolder),
-		fmt.Sprintf("%s", source),
-		fmt.Sprintf("\"%s\"", ovftool_uri),
+	}
+
+	if p.config.Insecure != "" {
+		args = append(args, fmt.Sprintf("--noSSLVerify=%t", p.config.Insecure))
+	}
+
+	if p.config.DiskMode != "" {
+		args = append(args, fmt.Sprintf("--diskMode=\"%s\"", p.config.DiskMode))
+	}
+
+	if p.config.VMFolder != "" {
+		args = append(args, fmt.Sprintf("--vmFolder=\"%s\"", p.config.VMFolder))
+	}
+
+	if p.config.Network != "" {
+		args = append(args, fmt.Sprintf("--network=\"%s\"", p.config.VMNetwork))
 	}
 
 	ui.Message(fmt.Sprintf("Uploading %s to vSphere", source))
@@ -142,6 +152,10 @@ func (p *PostProcessor) PostProcess(ui packer.Ui, artifact packer.Artifact) (pac
 	if len(p.config.Options) > 0 {
 		args = append(args, p.config.Options...)
 	}
+
+	// We always want these last
+	args = append(args, fmt.Sprintf("%s", source))
+	args = append(args, fmt.Sprintf("\"%s\"", ovftool_uri))
 
 	ui.Message(fmt.Sprintf("Uploading %s to vSphere", source))
 	var out bytes.Buffer
