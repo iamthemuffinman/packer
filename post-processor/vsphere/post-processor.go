@@ -160,7 +160,7 @@ func (p *PostProcessor) PostProcess(ui packer.Ui, artifact packer.Artifact) (pac
 	ui.Message(fmt.Sprintf("Uploading %s to vSphere", source))
 	var out bytes.Buffer
 	log.Printf("Starting ovftool with parameters: %s", strings.Join(args, " "))
-	cmd := exec.Command("ovftool", args...)
+	cmd := exec.Command("/bin/bash", "-c", "ovftool ", strings.Join(args, " "))
 	cmd.Stdout = &out
 	if err := cmd.Run(); err != nil {
 		return nil, false, fmt.Errorf("Failed: %s\nStdout: %s", err, out.String())
